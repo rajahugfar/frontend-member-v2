@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import { useMemberStore } from '@/store/memberStore'
 import ImageModal from './ImageModal'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 const MemberChat: React.FC = () => {
   const { member } = useMemberStore()
   const [isOpen, setIsOpen] = useState(false)
@@ -336,7 +338,7 @@ const MemberChat: React.FC = () => {
               >
                 {imageUrl && (
                   <img
-                    src={`http://localhost:3000${imageUrl}`}
+                    src={`${API_URL}${imageUrl}`}
                     alt="attachment"
                     className="rounded-lg mb-2 max-w-full cursor-pointer"
                     onClick={() => setModalImageUrl(imageUrl)}

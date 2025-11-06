@@ -297,7 +297,7 @@ const ChatManagement = () => {
                                 >
                                   {(message.imageUrl || message.image_url) && (
                                     <img
-                                      src={`http://localhost:3000${message.imageUrl || message.image_url}`}
+                                      src={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${message.imageUrl || message.image_url}`}
                                       alt="attachment"
                                       className="rounded-lg mb-2 max-w-full cursor-pointer"
                                       onClick={() => setModalImageUrl(message.imageUrl || message.image_url || '')}

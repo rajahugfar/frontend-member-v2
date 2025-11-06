@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { FiX, FiDownload } from 'react-icons/fi'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
 interface ImageModalProps {
   imageUrl: string
   onClose: () => void
@@ -25,7 +27,7 @@ export default function ImageModal({ imageUrl, onClose }: ImageModalProps) {
 
   const handleDownload = () => {
     const link = document.createElement('a')
-    link.href = `http://localhost:3000${imageUrl}`
+    link.href = `${API_URL}${imageUrl}`
     link.download = imageUrl.split('/').pop() || 'image.jpg'
     document.body.appendChild(link)
     link.click()
@@ -64,7 +66,7 @@ export default function ImageModal({ imageUrl, onClose }: ImageModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <img
-          src={`http://localhost:3000${imageUrl}`}
+          src={`${API_URL}${imageUrl}`}
           alt="Full size"
           className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
         />
