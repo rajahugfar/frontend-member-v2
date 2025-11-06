@@ -8,6 +8,7 @@ const API_BASE_PATH = import.meta.env.VITE_API_BASE_PATH || '/api/v1'
 export const apiClient = axios.create({
   baseURL: `${API_URL}${API_BASE_PATH}`,
   timeout: 30000,
+  withCredentials: true, // Send cookies with cross-origin requests
   headers: {
     'Content-Type': 'application/json',
   },
