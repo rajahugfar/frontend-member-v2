@@ -16,6 +16,7 @@ interface AuthState {
   register: (data: RegisterData) => Promise<void>
   logout: () => void
   refreshAccessToken: () => Promise<void>
+  refreshUser: () => Promise<void>
   clearError: () => void
   updateUser: (user: Partial<User>) => void
 }
@@ -100,6 +101,27 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           // If refresh fails, logout user
           get().logout()
+          throw error
+        }
+      },
+
+      refreshUser: async () => {
+        try {
+          const { accessToken } = get()
+          if (!accessToken) {
+            throw new Error('No access token available')
+          }
+
+          // Fetch updated user data from API
+          // This assumes there's a /me or /profile endpoint
+          // Adjust based on your actual API
+          const response = await authAPI.refreshToken(accessToken)
+          if (response.user) {
+            set({ user: response.user })
+          }
+        } catch (error) {
+          console.error('Failed to refresh user:', error)
+          // Don't logout on refresh user failure
           throw error
         }
       },

@@ -14,6 +14,12 @@ export interface CartItem {
   last_add_num?: number
   is_duplicate?: boolean
   huayName?: string
+  // Special number tracking fields
+  isSpecialNumber?: boolean
+  remainingAmount?: number
+  maxSaleAmount?: number
+  soldAmount?: number
+  checkResult?: string
 }
 
 /**

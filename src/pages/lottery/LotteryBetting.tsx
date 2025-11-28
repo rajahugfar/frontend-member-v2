@@ -73,9 +73,8 @@ const LotteryBetting: React.FC = () => {
   const lotteryState = useLotteryState(periodId)
 
   const {
-    selectedBetTypes,
-    toggleBetType,
-    setSelectedBetTypes,
+    selectedBetType,
+    setSelectedBetType,
     inputMode,
     setInputMode,
     numberInput,
@@ -98,7 +97,7 @@ const LotteryBetting: React.FC = () => {
   } = lotteryState
 
   // Get current bet type config (use first selected for keyboard input)
-  const currentConfig = selectedBetTypes.length > 0 ? BET_TYPES[selectedBetTypes[0]] : BET_TYPES['teng_bon_3']
+  const currentConfig = selectedBetType ? BET_TYPES[selectedBetType] : BET_TYPES['teng_bon_3']
 
   // Physical Keyboard Support
   useKeyboardInput({
@@ -176,7 +175,7 @@ const LotteryBetting: React.FC = () => {
       // Set default bet type to teng_bon_3 (3ตัวบน) if available, otherwise use first available
       if (ratesData && ratesData.length > 0) {
         const preferredBetType = ratesData.find(r => r.bet_type === 'teng_bon_3')
-        setSelectedBetTypes([preferredBetType ? 'teng_bon_3' : ratesData[0].bet_type])
+        setSelectedBetType(preferredBetType ? 'teng_bon_3' : ratesData[0].bet_type)
       }
     } catch (error) {
       console.error('Load error:', error)
@@ -653,14 +652,14 @@ const LotteryBetting: React.FC = () => {
           <div className="lg:col-span-8 space-y-3">
             {/* Bet Type Selector */}
             <BetTypeSelector
-              selectedBetTypes={selectedBetTypes}
-              onToggle={toggleBetType}
+              selectedBetType={selectedBetType}
+              onToggle={setSelectedBetType}
               rates={rates}
             />
 
             {/* Special Number Options */}
             <SpecialNumberOptions
-              selectedBetTypes={selectedBetTypes}
+              selectedBetType={selectedBetType}
               onAddNumbers={handleAddNumbers}
               shuffleEnabled={shuffleEnabled}
               setShuffleEnabled={setShuffleEnabled}
@@ -670,7 +669,7 @@ const LotteryBetting: React.FC = () => {
             <InputModeSection
               inputMode={inputMode}
               setInputMode={setInputMode}
-              selectedBetTypes={selectedBetTypes}
+              selectedBetType={selectedBetType}
               numberInput={numberInput}
               setNumberInput={setNumberInput}
               onAddNumber={handleAddNumber}
