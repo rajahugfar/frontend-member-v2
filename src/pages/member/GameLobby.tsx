@@ -37,10 +37,14 @@ const GameLobby: React.FC = () => {
   const loadGames = async () => {
     setLoading(true)
     try {
-      const response = await publicGameAPI.getGames({
-        provider: providerParam || undefined,
-        limit: 1000
-      })
+      let response
+      if (providerParam) {
+        // Use AMB API for specific provider
+        response = await publicGameAPI.getAmbGamesByProvider(providerParam)
+      } else {
+        // Use general API for all games
+        response = await publicGameAPI.getGames({ limit: 1000 })
+      }
       setGames(response.games || [])
     } catch (error) {
       console.error('Load games error:', error)

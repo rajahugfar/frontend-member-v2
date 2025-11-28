@@ -94,4 +94,10 @@ export const publicGameAPI = {
     })
     return response.data.data
   },
+
+  // Get AMB games by provider
+  getAmbGamesByProvider: async (provider: string): Promise<GameListResponse> => {
+    const response = await publicClient.get(`/member/games/amb/${provider}`)
+    return response.data.data
+  },
 }
