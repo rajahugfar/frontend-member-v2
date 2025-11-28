@@ -14,6 +14,7 @@ const publicClient = axios.create({
 export interface GameProvider {
   id: number
   product_name: string
+  product_code: string
   description: string
   category: string
   game_type: string
