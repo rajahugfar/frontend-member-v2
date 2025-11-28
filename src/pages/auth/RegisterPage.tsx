@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -8,7 +8,8 @@ import { FaUser, FaLock, FaPhone, FaUserPlus, FaCreditCard, FaUniversity } from 
 import { FiMessageCircle } from 'react-icons/fi'
 import { authAPI } from '@api/authAPI'
 import { useMemberStore } from '../../store/memberStore'
-import type { RegisterData } from '../../types/auth'
+import type { RegisterData } from '@/types/auth'
+import { useTranslation } from 'react-i18next'
 
 const THAI_BANKS = [
   { value: '', label: 'เลือกธนาคาร' },
@@ -52,7 +53,9 @@ const registerSchema = z
 type RegisterFormData = z.infer<typeof registerSchema>
 
 const RegisterPage = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { referralCode: urlReferralCode } = useParams<{ referralCode?: string }>()
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useMemberStore()
 
@@ -60,9 +63,20 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      referralCode: urlReferralCode || '',
+    },
   })
+
+  // Set referral code from URL when component mounts or referralCode changes
+  useEffect(() => {
+    if (urlReferralCode) {
+      setValue('referralCode', urlReferralCode)
+    }
+  }, [urlReferralCode, setValue])
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
@@ -119,7 +133,7 @@ const RegisterPage = () => {
                 <span className="text-3xl font-bold text-white">P</span>
               </div>
               <h1 className="text-3xl font-bold text-white mb-2">เพิ่มโชค</h1>
-              <p className="text-white/70 text-sm">สมัครสมาชิก</p>
+              <p className="text-white/70 text-sm">{t("auth:register.title")}</p>
             </div>
           </div>
 
@@ -257,17 +271,33 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label className="block text-white/90 text-sm font-medium mb-2">รหัสแนะนำ (ไม่บังคับ)</label>
+            <label className="block text-white/90 text-sm font-medium mb-2">
+              รหัสแนะนำ (ไม่บังคับ)
+              {urlReferralCode && (
+                <span className="ml-2 text-green-400 text-xs">
+                  ✓ กำลังสมัครผ่านรหัสแนะนำ
+                </span>
+              )}
+            </label>
             <div className="relative">
               <FaUserPlus className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
               <input
                 {...register('referralCode')}
                 type="text"
                 placeholder="รหัสแนะนำจากเพื่อน"
-                className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className={`w-full pl-12 pr-4 py-3 bg-white/10 border rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                  urlReferralCode ? 'border-green-400/50 bg-green-500/10' : 'border-white/20'
+                }`}
                 disabled={isLoading}
+                readOnly={!!urlReferralCode}
               />
             </div>
+            {urlReferralCode && (
+              <p className="text-green-300 text-xs mt-1 flex items-center gap-1">
+                <FaUserPlus className="text-green-400" />
+                คุณกำลังสมัครผ่านคำแนะนำของเพื่อน
+              </p>
+            )}
           </div>
         </div>
 
@@ -285,7 +315,7 @@ const RegisterPage = () => {
           ) : (
             <>
               <FaUserPlus />
-              <span>สมัครสมาชิก</span>
+              <span>{t("auth:register.title")}</span>
             </>
           )}
         </button>

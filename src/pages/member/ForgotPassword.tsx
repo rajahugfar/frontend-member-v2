@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from 'react-router-dom'
 import { FiPhone, FiLock, FiKey, FiArrowLeft } from 'react-icons/fi'
 import { authAPI } from '../../api/memberAPI'
@@ -7,6 +8,7 @@ import { toast } from 'react-hot-toast'
 type Step = 'phone' | 'otp' | 'password'
 
 const ForgotPassword: React.FC = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<Step>('phone')
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const ForgotPassword: React.FC = () => {
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<any>({})
+  const [otpSent, setOtpSent] = useState(false)
   const [countdown, setCountdown] = useState(0)
 
   const validatePhone = (phone: string) => {
@@ -63,6 +66,7 @@ const ForgotPassword: React.FC = () => {
     try {
       await authAPI.forgotPassword(formData.phone)
       toast.success('ส่ง OTP ไปยังเบอร์โทรศัพท์เรียบร้อยแล้ว')
+      setOtpSent(true)
       setStep('otp')
       startCountdown()
     } catch (error: any) {
@@ -340,7 +344,7 @@ const ForgotPassword: React.FC = () => {
             <span>กำลังเปลี่ยนรหัสผ่าน...</span>
           </>
         ) : (
-          <span>เปลี่ยนรหัสผ่าน</span>
+          <span>{t("member:profile.changePassword")}</span>
         )}
       </button>
     </form>

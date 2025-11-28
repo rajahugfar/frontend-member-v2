@@ -6,7 +6,8 @@ import { z } from 'zod'
 import toast from 'react-hot-toast'
 import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa'
 import { useAuthStore } from '@store/authStore'
-import type { LoginCredentials } from '../../types/auth'
+import type { LoginCredentials } from '@/types/auth'
+import { useTranslation } from 'react-i18next'
 
 const loginSchema = z.object({
   phone: z
@@ -17,6 +18,7 @@ const loginSchema = z.object({
 })
 
 const LoginPage = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { login } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
@@ -44,12 +46,12 @@ const LoginPage = () => {
 
   return (
     <div className="card">
-      <h2 className="text-2xl font-bold text-center mb-6">เข้าสู่ระบบ</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">{t("auth:login.title")}</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium mb-2">เบอร์โทรศัพท์</label>
+          <label className="block text-sm font-medium mb-2">{t("auth:login.username")}</label>
           <div className="relative">
             <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -67,7 +69,7 @@ const LoginPage = () => {
 
         {/* Password */}
         <div>
-          <label className="block text-sm font-medium mb-2">รหัสผ่าน</label>
+          <label className="block text-sm font-medium mb-2">{t("auth:login.password")}</label>
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -97,7 +99,7 @@ const LoginPage = () => {
           ) : (
             <>
               <FaSignInAlt />
-              <span>เข้าสู่ระบบ</span>
+              <span>{t("auth:login.title")}</span>
             </>
           )}
         </button>
