@@ -1,5 +1,5 @@
 import React from 'react'
-import { FiShoppingCart, FiTrash2, FiEdit, FiCornerUpLeft, FiSave } from 'react-icons/fi'
+import { FiShoppingCart, FiTrash2, FiEdit, FiCornerUpLeft, FiSave, FiX } from 'react-icons/fi'
 import { FaCheck } from 'react-icons/fa'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CartItem } from '@/hooks/useLotteryState'

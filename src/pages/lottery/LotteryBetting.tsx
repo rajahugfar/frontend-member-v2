@@ -267,62 +267,54 @@ const LotteryBetting: React.FC = () => {
   async function handleAddNumber(number: string) {
     if (!number) return
 
-    if (selectedBetTypes.length === 0) {
+    if (!selectedBetType) {
       toast.error(t('lottery:messages.selectBetType'))
       return
     }
 
-    let totalAdded = 0
-
-    // Add for all selected bet types
-    for (const betType of selectedBetTypes) {
-      const rate = rates.find(r => r.bet_type === betType)
-      if (!rate) continue
-
-      // Check duplicate
-      if (checkDuplicate(number, betType, cart)) continue
-
-      const added = await addNumberForBetType(number, betType)
-      totalAdded += added
+    // Add for selected bet type
+    const rate = rates.find(r => r.bet_type === selectedBetType)
+    if (!rate) {
+      toast.error(t('lottery:messages.invalidBetType'))
+      return
     }
 
-    if (totalAdded > 1) {
-      toast.success(t('lottery:messages.addedToCart', { count: totalAdded }))
-    } else if (totalAdded === 1) {
-      toast.success(t('lottery:messages.addedSingleToCart', { number }))
-    } else {
+    // Check duplicate
+    if (checkDuplicate(number, selectedBetType, cart)) {
       toast.error(t('lottery:messages.alreadyInCart'))
+      return
+    }
+
+    const added = await addNumberForBetType(number, selectedBetType)
+    if (added > 0) {
+      toast.success(t('lottery:messages.addedSingleToCart', { number }))
     }
   }
 
   // Handle Add Multiple Numbers (from special options)
   const handleAddNumbers = (numbers: string[]) => {
-    if (selectedBetTypes.length === 0) return
+    if (!selectedBetType) return
 
     let addedCount = 0
+    const rate = rates.find(r => r.bet_type === selectedBetType)
+    if (!rate) return
 
-    // Add for all selected bet types
-    for (const betType of selectedBetTypes) {
-      const rate = rates.find(r => r.bet_type === betType)
-      if (!rate) continue
+    const config = BET_TYPES[selectedBetType]
+    if (!config) return
 
-      const config = BET_TYPES[betType]
-      if (!config) continue
-
-      numbers.forEach(number => {
-        if (!checkDuplicate(number, betType, cart)) {
-          addToCart({
-            bet_type: betType,
-            bet_type_label: config.label,
-            number,
-            amount: 0,
-            payout_rate: rate.multiply,
-            huayName: period?.huayName
-          })
-          addedCount++
-        }
-      })
-    }
+    numbers.forEach(number => {
+      if (!checkDuplicate(number, selectedBetType, cart)) {
+        addToCart({
+          bet_type: selectedBetType,
+          bet_type_label: config.label,
+          number,
+          amount: 0,
+          payout_rate: rate.multiply,
+          huayName: period?.huayName
+        })
+        addedCount++
+      }
+    })
 
     if (addedCount > 0) {
       toast.success(t('lottery:messages.addedNumbersToCart', { count: addedCount }))
