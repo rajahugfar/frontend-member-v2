@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
-import { Outlet, useNavigate, Link } from 'react-router-dom'
-import {
-  FaLine,
-  FaSignOutAlt,
-  FaTrophy,
-} from 'react-icons/fa'
+import React, { useEffect, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { FaLine, FaTrophy } from 'react-icons/fa'
 import { useMemberStore } from '@store/memberStore'
 import toast from 'react-hot-toast'
 import MemberChat from '@/components/chat/MemberChat'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
+import MemberNavbar from '@/components/MemberNavbar'
 
 const MemberLayout: React.FC = () => {
   const navigate = useNavigate()
   const { logout, member, loadProfile } = useMemberStore()
+  const [settings] = useState({ site_name: 'PERMCHOK', site_logo: '/images/logo.webp' })
 
   useEffect(() => {
     // Load profile only if not already in store
@@ -47,13 +44,6 @@ const MemberLayout: React.FC = () => {
     toast.success('ออกจากระบบสำเร็จ')
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount)
-  }
-
   return (
     <div className="min-h-screen bg-[#0a1520] relative">
       {/* Animated Background */}
@@ -63,57 +53,12 @@ const MemberLayout: React.FC = () => {
         <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-20 bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 border-b-4 border-yellow-400 shadow-2xl">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/member" className="flex items-center space-x-3">
-              <img src="/images/logo.webp" alt="Logo" className="h-12 w-auto" />
-              <span className="text-2xl font-black text-white drop-shadow-lg hidden sm:inline">PERMCHOK</span>
-            </Link>
-
-            {/* Center Menu */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/member" className="text-white hover:text-yellow-200 font-bold transition-colors">
-                หน้าแรก
-              </Link>
-              <Link to="/member/promotions" className="text-white hover:text-yellow-200 font-bold transition-colors">
-                สมัครสมาชิก
-              </Link>
-              <Link to="/member/promotions" className="text-white hover:text-yellow-200 font-bold transition-colors">
-                โปรโมชั่น
-              </Link>
-            </nav>
-
-            {/* Right: Language Switcher, User Info & Fullname */}
-            {member && (
-              <div className="flex items-center space-x-3">
-                {/* Language Switcher */}
-                <LanguageSwitcher variant="compact" />
-
-                {member.fullname && (
-                  <Link to="/member/profile" className="hidden md:flex items-center space-x-2 text-white hover:text-yellow-200 font-bold">
-                    <span>{member.fullname}</span>
-                  </Link>
-                )}
-                <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-yellow-300/50">
-                  <span className="text-yellow-200 text-sm font-bold">
-                    ฿{formatCurrency(member.credit || 0)}
-                  </span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-10 h-10 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg hover:shadow-xl"
-                  title="ออกจากระบบ"
-                >
-                  <FaSignOutAlt />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+      {/* Navbar with dropdown and language switcher */}
+      <MemberNavbar
+        profile={member}
+        settings={settings}
+        onLogout={handleLogout}
+      />
 
 
       {/* Main Content */}
