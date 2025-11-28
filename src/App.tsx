@@ -77,6 +77,7 @@ import MemberDepositHistory from '@pages/member/DepositHistory'
 import MemberWithdrawal from '@pages/member/Withdrawal'
 import MemberWithdrawalHistory from '@pages/member/WithdrawalHistory'
 import MemberGameLobby from '@pages/member/GameLobby'
+import AMBGameList from '@pages/member/AMBGameList'
 import MemberTransactionHistory from '@pages/member/TransactionHistory'
 import MemberPromotions from '@pages/member/Promotions'
 import MemberBonusHistory from '@pages/member/BonusHistory'
@@ -253,6 +254,7 @@ function App() {
           <Route path="/member/withdrawal" element={<MemberWithdrawal />} />
           <Route path="/member/withdrawal/history" element={<MemberWithdrawalHistory />} />
           <Route path="/member/games" element={<MemberGameLobby />} />
+          <Route path="/member/games/:provider" element={<AMBGameList />} />
           <Route path="/member/transactions" element={<MemberTransactionHistory />} />
           <Route path="/member/promotions" element={<MemberPromotions />} />
           <Route path="/member/bonuses" element={<MemberBonusHistory />} />

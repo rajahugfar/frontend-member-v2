@@ -205,7 +205,7 @@ const MemberIndex = () => {
                     transition={{ duration: 0.3, delay: index * 0.02 }}
                   >
                     <Link
-                      to={`/member/games?provider=${provider.product_code}`}
+                      to={`/member/games/${provider.product_code}`}
                       className="group relative block"
                     >
                       <div className="relative">
