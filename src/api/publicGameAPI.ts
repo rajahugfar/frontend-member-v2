@@ -103,6 +103,10 @@ export const publicGameAPI = {
     // AMB API returns { data: { games: [...], productId: "..." } }
     // Transform AMB game format to match our Game interface
     const ambData = response.data.data
+
+    console.log('Raw AMB API response:', ambData)
+    console.log('First raw game:', ambData.games?.[0])
+
     const transformedGames = (ambData.games || []).map((game: any) => ({
       id: game.code,
       gameCode: game.code,
@@ -117,6 +121,8 @@ export const publicGameAPI = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }))
+
+    console.log('First transformed game:', transformedGames[0])
 
     return {
       games: transformedGames,
