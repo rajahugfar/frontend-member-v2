@@ -50,6 +50,7 @@ const LotteryBetting: React.FC = () => {
   const {
     selectedBetTypes,
     toggleBetType,
+    setSelectedBetTypes,
     inputMode,
     setInputMode,
     numberInput,
@@ -71,7 +72,8 @@ const LotteryBetting: React.FC = () => {
     setShowSuccessModal
   } = lotteryState
 
-  // Get current bet type config
+  // Get current bet type config - use first selected bet type
+  const selectedBetType = selectedBetTypes.length > 0 ? selectedBetTypes[0] : 'teng_bon_3'
   const currentConfig = BET_TYPES[selectedBetType]
 
   // Physical Keyboard Support
@@ -112,7 +114,7 @@ const LotteryBetting: React.FC = () => {
 
       // Set default bet type
       if (ratesData && ratesData.length > 0) {
-        setSelectedBetType(ratesData[0].bet_type)
+        setSelectedBetTypes([ratesData[0].bet_type])
       }
     } catch (error) {
       console.error('Load error:', error)

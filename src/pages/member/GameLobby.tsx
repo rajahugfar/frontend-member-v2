@@ -6,7 +6,6 @@ import { FiSearch, FiPlay, FiEye, FiArrowRight, FiArrowLeft, FiChevronRight } fr
 import { FaHome } from 'react-icons/fa'
 import { publicGameAPI } from '../../api/publicGameAPI'
 import { gameAPI } from '../../api/memberAPI'
-import { useMemberStore } from '@store/memberStore'
 import { toast } from 'react-hot-toast'
 import MemberChat from '@/components/chat/MemberChat'
 

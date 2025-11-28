@@ -132,7 +132,6 @@ export const SavedTemplatesModal = ({
     try {
       await memberLotteryAPI.deleteSavedTemplate(templateId)
       await fetchTemplates()
-      setSelectedTemplate(null)
       setExpandedTemplate(null)
     } catch (err) {
       setError('ไม่สามารถลบโพยได้')

@@ -65,7 +65,6 @@ const ForgotPassword: React.FC = () => {
     try {
       await authAPI.forgotPassword(formData.phone)
       toast.success('ส่ง OTP ไปยังเบอร์โทรศัพท์เรียบร้อยแล้ว')
-      setOtpSent(true)
       setStep('otp')
       startCountdown()
     } catch (error: any) {

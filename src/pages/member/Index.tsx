@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import {
-  FaTrophy,
-} from 'react-icons/fa'
-import { profileAPI } from '@api/memberAPI'
+import { FaTrophy, FaLine } from 'react-icons/fa'
 import { gameProviderAPI, type GameProvider } from '@api/gameProviderAPI'
 import { useMemberStore } from '@store/memberStore'
 import { toast } from 'react-hot-toast'
@@ -12,14 +9,13 @@ import MemberChat from '@/components/chat/MemberChat'
 
 const MemberIndex = () => {
   const { member } = useMemberStore()
-  const [profile, setProfile] = useState<any>(null)
+  const [profile] = useState<any>(null)
   const [, setLoading] = useState(true)
   const [providers, setProviders] = useState<GameProvider[]>([])
   const [activeTab, setActiveTab] = useState<string>('Slot') // Default to Slot category
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    loadProfile()
     loadProviders(activeTab) // Load initial category
   }, [])
 
@@ -27,22 +23,6 @@ const MemberIndex = () => {
   useEffect(() => {
     loadProviders(activeTab)
   }, [activeTab])
-
-  const loadProfile = async () => {
-    try {
-      const response = await profileAPI.getProfile()
-      // API returns { data: { data: {...}, success, message } }
-      setProfile(response.data.data)
-    } catch (error) {
-      console.error('Failed to load profile:', error)
-      // Fallback to member from store if API fails
-      if (member) {
-        setProfile(member)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const loadProviders = async (category?: string) => {
     try {
