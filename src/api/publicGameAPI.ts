@@ -97,7 +97,9 @@ export const publicGameAPI = {
 
   // Get AMB games by provider
   getAmbGamesByProvider: async (provider: string): Promise<GameListResponse> => {
-    const response = await publicClient.get(`/member/games/amb/${provider}`)
+    // Convert provider name to uppercase for AMB productId
+    const productId = provider.toUpperCase()
+    const response = await publicClient.get(`/member/games/amb/${productId}`)
     return response.data.data
   },
 }
