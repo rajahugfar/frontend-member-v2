@@ -60,10 +60,21 @@ const MemberIndex = () => {
         response = await gameProviderAPI.getProviders()
       }
 
-      setProviders(response.data)
+      console.log('Providers loaded:', response)
+
+      // Handle different response structures
+      if (response && response.data) {
+        setProviders(response.data)
+      } else if (Array.isArray(response)) {
+        setProviders(response)
+      } else {
+        console.warn('Unexpected response format:', response)
+        setProviders([])
+      }
     } catch (error) {
       console.error('Failed to load providers:', error)
       toast.error('ไม่สามารถโหลด providers ได้')
+      setProviders([])
     } finally {
       setLoading(false)
     }

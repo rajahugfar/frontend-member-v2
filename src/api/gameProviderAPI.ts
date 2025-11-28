@@ -30,36 +30,26 @@ export interface GameProviderResponse {
 
 export const gameProviderAPI = {
   /**
-   * Get game providers from database
+   * Get game providers from database (using member endpoint like frontend-member)
    * @param featured - If true, only return featured providers
    */
   getProviders: async (featured?: boolean): Promise<GameProviderResponse> => {
     const url = featured
-      ? '/public/game-providers?featured=true'
-      : '/public/game-providers'
+      ? '/member/providers?featured=true'
+      : '/member/providers'
     const response = await publicClient.get<GameProviderResponse>(url)
     return response.data
   },
 
   /**
-   * Get providers by category
-   * Note: Backend doesn't support category filter yet, so we filter client-side
+   * Get providers by category (using member endpoint like frontend-member)
    */
   getProvidersByCategory: async (category: string): Promise<GameProviderResponse> => {
-    // Get all providers first
-    const response = await publicClient.get<GameProviderResponse>('/public/game-providers')
+    const url = category
+      ? `/member/providers?category=${category}`
+      : '/member/providers'
 
-    // Filter by category if not 'all' or 'new'
-    if (category && category !== 'all' && category !== 'new') {
-      const filtered = response.data.data.filter(
-        p => p.category.toLowerCase() === category.toLowerCase()
-      )
-      return {
-        success: response.data.success,
-        data: filtered
-      }
-    }
-
+    const response = await publicClient.get<GameProviderResponse>(url)
     return response.data
   },
 }
