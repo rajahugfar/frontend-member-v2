@@ -22,7 +22,6 @@ const GameLobby: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const providerParam = searchParams.get('provider')
-  const { member } = useMemberStore()
 
   const [games, setGames] = useState<any[]>([])
   const [loading, setLoading] = useState(true)

@@ -43,9 +43,7 @@ export const SavedTemplatesModal = ({
   const [showSaveForm, setShowSaveForm] = useState(false)
   const [newTemplateName, setNewTemplateName] = useState('')
   const [newTemplateDesc, setNewTemplateDesc] = useState('')
-  const [selectedTemplate, setSelectedTemplate] = useState<SavedPoyTemplate | null>(null)
   const [expandedTemplate, setExpandedTemplate] = useState<SavedPoyTemplate | null>(null)
-  const [loadingDetails, setLoadingDetails] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -139,24 +137,6 @@ export const SavedTemplatesModal = ({
     } catch (err) {
       setError('ไม่สามารถลบโพยได้')
       console.error(err)
-    }
-  }
-
-  const handleExpandTemplate = async (template: SavedPoyTemplate) => {
-    if (expandedTemplate?.id === template.id) {
-      setExpandedTemplate(null)
-      return
-    }
-
-    setLoadingDetails(true)
-    try {
-      const fullTemplate = await memberLotteryAPI.getSavedTemplate(template.id)
-      setExpandedTemplate(fullTemplate)
-    } catch (err) {
-      setError('ไม่สามารถโหลดรายละเอียดได้')
-      console.error(err)
-    } finally {
-      setLoadingDetails(false)
     }
   }
 

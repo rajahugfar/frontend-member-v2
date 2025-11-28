@@ -19,7 +19,6 @@ const ForgotPassword: React.FC = () => {
   })
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<any>({})
-  const [otpSent, setOtpSent] = useState(false)
   const [countdown, setCountdown] = useState(0)
 
   const validatePhone = (phone: string) => {

@@ -3,7 +3,6 @@ import { FaDice } from 'react-icons/fa'
 import { FiCheck } from 'react-icons/fi'
 import { BET_TYPES } from '@/utils/lotteryHelpers'
 import { LotteryRate } from '@api/memberLotteryAPI'
-import { useTranslation } from 'react-i18next'
 
 interface BetTypeSelectorProps {
   selectedBetTypes: string[]
@@ -29,7 +28,6 @@ const BetTypeSelector: React.FC<BetTypeSelectorProps> = ({
   rates,
   disabled = false
 }) => {
-  const { t } = useTranslation()
   // Update bet type configs with actual rates from API
   const betTypeConfigs = Object.values(BET_TYPES).map(config => {
     const rate = rates.find(r => r.bet_type === config.id)

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import { memberLotteryAPI, OpenPeriod, LotteryRate, HuayConfig } from '@api/memberLotteryAPI'
-import { memberLotteryResultsAPI, LotteryResultItem } from '@api/memberLotteryResultsAPI'
-import { memberLotteryCheckAPI } from '@api/memberLotteryCheckAPI'
+import { useParams, useNavigate } from 'react-router-dom'
+import { memberLotteryAPI, OpenPeriod, LotteryRate } from '@api/memberLotteryAPI'
 import { toast } from 'react-hot-toast'
 import { FiClock, FiX, FiShoppingCart, FiArrowLeft } from 'react-icons/fi'
-import { FaUser, FaSignOutAlt, FaCoins, FaMoneyBillWave } from 'react-icons/fa'
+import { FaCoins, FaMoneyBillWave } from 'react-icons/fa'
 import { useLotteryState } from '@/hooks/useLotteryState'
 import { useKeyboardInput } from '@/hooks/useKeyboardInput'
 import { reloadCredit } from '@/utils/creditHelpers'
@@ -37,7 +35,7 @@ const LotteryBetting: React.FC = () => {
   const { t } = useTranslation()
   const { periodId } = useParams<{ periodId: string }>()
   const navigate = useNavigate()
-  const { logout, member } = useMemberStore()
+  const { logout } = useMemberStore()
   const { refreshUser } = useAuthStore()
 
   // Data States
@@ -567,25 +565,6 @@ const LotteryBetting: React.FC = () => {
   }
 
   const totalAmount = cart.reduce((sum, item) => sum + item.amount, 0)
-  const totalPotentialWin = cart.reduce((sum, item) => sum + item.potential_win, 0)
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount)
-  }
-
-  const handleLogout = async () => {
-    try {
-      logout()
-      navigate('/login')
-      toast.success(t('lottery:messages.logoutSuccess'))
-    } catch (error) {
-      console.error('Logout error:', error)
-      toast.error(t('lottery:messages.logoutError'))
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white relative overflow-hidden">

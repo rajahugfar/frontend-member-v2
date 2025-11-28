@@ -112,12 +112,10 @@ export const useAuthStore = create<AuthState>()(
             throw new Error('No access token available')
           }
 
-          // Fetch updated user data from API
-          // This assumes there's a /me or /profile endpoint
-          // Adjust based on your actual API
-          const response = await authAPI.refreshToken(accessToken)
-          if (response.user) {
-            set({ user: response.user })
+          // Fetch updated user data from API profile endpoint
+          const profile = await authAPI.getProfile()
+          if (profile) {
+            set({ user: profile })
           }
         } catch (error) {
           console.error('Failed to refresh user:', error)

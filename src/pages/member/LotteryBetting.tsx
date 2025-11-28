@@ -48,8 +48,8 @@ const LotteryBetting: React.FC = () => {
   const lotteryState = useLotteryState(periodId)
 
   const {
-    selectedBetType,
-    setSelectedBetType,
+    selectedBetTypes,
+    toggleBetType,
     inputMode,
     setInputMode,
     numberInput,
@@ -350,14 +350,14 @@ const LotteryBetting: React.FC = () => {
           <div className="lg:col-span-8 space-y-3">
             {/* Bet Type Selector */}
             <BetTypeSelector
-              selectedBetType={selectedBetType}
-              onSelect={setSelectedBetType}
+              selectedBetTypes={selectedBetTypes}
+              onToggle={toggleBetType}
               rates={rates}
             />
 
             {/* Special Number Options */}
             <SpecialNumberOptions
-              selectedBetType={selectedBetType}
+              selectedBetTypes={selectedBetTypes}
               onAddNumbers={handleAddNumbers}
               shuffleEnabled={shuffleEnabled}
               setShuffleEnabled={setShuffleEnabled}
@@ -367,7 +367,7 @@ const LotteryBetting: React.FC = () => {
             <InputModeSection
               inputMode={inputMode}
               setInputMode={setInputMode}
-              selectedBetType={selectedBetType}
+              selectedBetTypes={selectedBetTypes}
               numberInput={numberInput}
               setNumberInput={setNumberInput}
               onAddNumber={handleAddNumber}

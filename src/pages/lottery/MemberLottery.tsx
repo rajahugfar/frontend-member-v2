@@ -7,7 +7,6 @@ import {
   FiTrendingUp,
   FiFileText,
   FiCalendar,
-  FiAward,
   FiChevronRight,
   FiStar,
   FiZap
@@ -123,7 +122,6 @@ const isPremiumLottery = (huayCode: string) => {
 
 const MemberLottery: React.FC = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<TabType>('list')
   const [periods, setPeriods] = useState<OpenPeriod[]>([])
   const [loading, setLoading] = useState(false)
@@ -353,6 +351,7 @@ const MemberLottery: React.FC = () => {
 
 // Premium Lottery Card (for 3 main lotteries)
 const PremiumLotteryCard: React.FC<{ period: OpenPeriod; index: number }> = ({ period, index }) => {
+  const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState('')
   const theme = getLotteryTheme(period.huayCode)
   const icon = getLotteryIcon(period.huayCode)
@@ -436,6 +435,7 @@ const PremiumLotteryCard: React.FC<{ period: OpenPeriod; index: number }> = ({ p
 
 // Standard Lottery Card (for stock market and other lotteries)
 const StandardLotteryCard: React.FC<{ period: OpenPeriod; index: number }> = ({ period, index }) => {
+  const { t } = useTranslation()
   const [timeLeft, setTimeLeft] = useState('')
   const theme = getLotteryTheme(period.huayCode)
   const icon = getLotteryIcon(period.huayCode)
@@ -508,7 +508,7 @@ const StandardLotteryCard: React.FC<{ period: OpenPeriod; index: number }> = ({ 
 
 // Component: My Bets (Poy History)
 const LotteryMyBets: React.FC = () => {
-  const navigate = useNavigate()
+  const { t } = useTranslation()
   const [poys, setPoys] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [cancellingId, setCancellingId] = useState<string | null>(null)

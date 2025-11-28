@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { FiX } from 'react-icons/fi'
 import { FaMagic } from 'react-icons/fa'
@@ -27,7 +26,6 @@ const SpecialNumberOptions: React.FC<SpecialNumberOptionsProps> = ({
   shuffleEnabled,
   setShuffleEnabled
 }) => {
-  const { t } = useTranslation()
   const [showInputModal, setShowInputModal] = useState(false)
   const [inputModalType, setInputModalType] = useState<'19' | 'rood_nha' | 'rood_lung'>('19')
   const [inputValue, setInputValue] = useState('')

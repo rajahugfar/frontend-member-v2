@@ -4,7 +4,6 @@ import { FiCheck, FiX, FiSearch } from 'react-icons/fi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BET_TYPES, generateNumberGrid, filterNumbers } from '@/utils/lotteryHelpers'
 import { CartItem } from '@/hooks/useLotteryState'
-import { useTranslation } from 'react-i18next'
 
 interface InputModeSectionProps {
   inputMode: 'keyboard' | 'grid'
@@ -29,7 +28,6 @@ const InputModeSection: React.FC<InputModeSectionProps> = ({
   searchQuery,
   setSearchQuery
 }) => {
-  const { t } = useTranslation()
   // Use first selected bet type for config (all selected should have same digit count)
   const currentConfig = selectedBetTypes.length > 0 ? BET_TYPES[selectedBetTypes[0]] : BET_TYPES['teng_bon_3']
 
