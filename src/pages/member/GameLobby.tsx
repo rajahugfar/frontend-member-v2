@@ -297,6 +297,13 @@ const GameLobby: React.FC = () => {
                         src={game.imageUrl || 'https://via.placeholder.com/300x300?text=Game'}
                         alt={game.gameName}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          console.error('Image failed to load:', game.imageUrl, 'for game:', game.gameName)
+                          e.currentTarget.src = 'https://via.placeholder.com/300x300?text=No+Image'
+                        }}
+                        onLoad={() => {
+                          if (index === 0) console.log('✅ First image loaded successfully:', game.imageUrl)
+                        }}
                       />
 
                       {/* Badges */}

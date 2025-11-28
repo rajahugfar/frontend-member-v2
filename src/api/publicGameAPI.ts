@@ -104,25 +104,33 @@ export const publicGameAPI = {
     // Transform AMB game format to match our Game interface
     const ambData = response.data.data
 
-    console.log('Raw AMB API response:', ambData)
-    console.log('First raw game:', ambData.games?.[0])
+    const transformedGames = (ambData.games || []).map((game: any) => {
+      const transformed = {
+        id: game.code,
+        gameCode: game.code,
+        gameName: game.name,
+        gameType: game.type,
+        provider: provider,
+        imageUrl: game.img,
+        thumbnailUrl: game.img,
+        isActive: true,
+        isFeatured: false,
+        displayOrder: game.rank,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
 
-    const transformedGames = (ambData.games || []).map((game: any) => ({
-      id: game.code,
-      gameCode: game.code,
-      gameName: game.name,
-      gameType: game.type,
-      provider: provider,
-      imageUrl: game.img,
-      thumbnailUrl: game.img,
-      isActive: true,
-      isFeatured: false,
-      displayOrder: game.rank,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }))
+      // Debug first game only
+      if (game.rank === 1) {
+        console.log('🎮 AMB Game Transform:', {
+          original_img: game.img,
+          transformed_imageUrl: transformed.imageUrl,
+          gameName: transformed.gameName
+        })
+      }
 
-    console.log('First transformed game:', transformedGames[0])
+      return transformed
+    })
 
     return {
       games: transformedGames,
