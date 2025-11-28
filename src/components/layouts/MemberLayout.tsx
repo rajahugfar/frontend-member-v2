@@ -8,6 +8,7 @@ import {
 import { useMemberStore } from '@store/memberStore'
 import toast from 'react-hot-toast'
 import MemberChat from '@/components/chat/MemberChat'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 const MemberLayout: React.FC = () => {
   const navigate = useNavigate()
@@ -85,9 +86,12 @@ const MemberLayout: React.FC = () => {
               </Link>
             </nav>
 
-            {/* Right: User Info & Fullname */}
+            {/* Right: Language Switcher, User Info & Fullname */}
             {member && (
               <div className="flex items-center space-x-3">
+                {/* Language Switcher */}
+                <LanguageSwitcher variant="compact" />
+
                 {member.fullname && (
                   <Link to="/member/profile" className="hidden md:flex items-center space-x-2 text-white hover:text-yellow-200 font-bold">
                     <span>{member.fullname}</span>
