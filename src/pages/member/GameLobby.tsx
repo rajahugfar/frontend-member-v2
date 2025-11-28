@@ -75,7 +75,15 @@ const GameLobby: React.FC = () => {
       setLoadingGame(true)
       setLoadingGameName(gameName)
 
-      const response = await gameAPI.playGame(gameCode)
+      let response
+      if (providerParam) {
+        // Use AMB launch API when coming from specific provider page
+        response = await gameAPI.playAmbGame(gameCode, providerParam)
+      } else {
+        // Use regular launch API for all games page
+        response = await gameAPI.playGame(gameCode)
+      }
+
       if (response.data.success) {
         const gameUrl = response.data.data.url
         // Redirect to game URL in same tab

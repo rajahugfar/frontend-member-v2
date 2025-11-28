@@ -132,6 +132,13 @@ export const gameAPI = {
       platform,
       language: 'th'
     }),
+  playAmbGame: (gameCode: string, provider: string, platform: string = 'desktop') =>
+    memberAPI.post('/games/amb/launch', {
+      gameCode,
+      provider,
+      platform,
+      language: 'th'
+    }),
   getDemoGame: (gameCode: string) =>
     memberAPI.post(`/games/demo/${gameCode}`),
   transfer: (data: TransferData) =>
