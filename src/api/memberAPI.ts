@@ -45,17 +45,17 @@ memberAPI.interceptors.response.use(
 // Authentication APIs
 export const authAPI = {
   login: (phone: string, password: string) =>
-    memberAPI.post('/login', { phone, password }),
+    memberAPI.post('/auth/login', { phone, password }),
   register: (data: RegisterData) =>
-    memberAPI.post('/register', data),
+    memberAPI.post('/auth/register', data),
   logout: () =>
-    memberAPI.post('/logout'),
+    memberAPI.post('/auth/logout'),
   forgotPassword: (phone: string) =>
-    memberAPI.post('/forgot-password', { phone }),
+    memberAPI.post('/auth/forgot-password', { phone }),
   verifyOTP: (phone: string, otp: string) =>
-    memberAPI.post('/verify-otp', { phone, otp }),
+    memberAPI.post('/auth/verify-otp', { phone, otp }),
   resetPassword: (phone: string, otp: string, newPassword: string) =>
-    memberAPI.post('/reset-password', { phone, otp, newPassword }),
+    memberAPI.post('/auth/reset-password', { phone, otp, newPassword }),
 }
 
 // Profile APIs
