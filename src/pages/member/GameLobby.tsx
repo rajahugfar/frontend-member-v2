@@ -41,6 +41,8 @@ const GameLobby: React.FC = () => {
       if (providerParam) {
         // Use AMB API for specific provider
         response = await publicGameAPI.getAmbGamesByProvider(providerParam)
+        console.log('AMB Games loaded:', response.games?.length, 'games')
+        console.log('First game:', response.games?.[0])
       } else {
         // Use general API for all games
         response = await publicGameAPI.getGames({ limit: 1000 })
