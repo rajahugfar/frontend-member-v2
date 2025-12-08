@@ -27,6 +27,7 @@ interface Poy {
   status: number
   note: string
   dateBuy?: string
+  dateClose?: string
   createdAt: string
   updatedAt: string
 }
@@ -90,19 +91,27 @@ const LotteryHistory: React.FC = () => {
 
   const filteredPoys = getFilteredPoys()
 
-  const canCancelPoy = (dateBuy: string) => {
-    const buyTime = new Date(dateBuy).getTime()
+  const canCancelPoy = (dateClose?: string) => {
+    if (!dateClose) return false
+    const closeTime = new Date(dateClose).getTime()
     const now = new Date().getTime()
-    const diffMinutes = (now - buyTime) / (1000 * 60)
-    return diffMinutes < 30
+    return now < closeTime
   }
 
-  const getTimeLeftToCancel = (dateBuy: string) => {
-    const buyTime = new Date(dateBuy).getTime()
+  const getTimeLeftToCancel = (dateClose?: string) => {
+    if (!dateClose) return null
+    const closeTime = new Date(dateClose).getTime()
     const now = new Date().getTime()
-    const diffMinutes = 30 - (now - buyTime) / (1000 * 60)
+    const diffMinutes = (closeTime - now) / (1000 * 60)
     if (diffMinutes <= 0) return null
-    return Math.floor(diffMinutes)
+
+    // แสดงเป็นชั่วโมง ถ้ามากกว่า 60 นาที
+    if (diffMinutes >= 60) {
+      const hours = Math.floor(diffMinutes / 60)
+      const mins = Math.floor(diffMinutes % 60)
+      return `${hours} ชม. ${mins} นาที`
+    }
+    return `${Math.floor(diffMinutes)} นาที`
   }
 
   const handleCancelPoy = async (poyId: string) => {
@@ -345,8 +354,8 @@ const LotteryHistory: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredPoys.map((poy, index) => {
                 const dateBuy = poy.dateBuy || poy.createdAt
-                const canCancel = poy.status === 1 && canCancelPoy(dateBuy)
-                const timeLeft = canCancel ? getTimeLeftToCancel(dateBuy) : null
+                const canCancel = poy.status === 1 && canCancelPoy(poy.dateClose)
+                const timeLeft = canCancel ? getTimeLeftToCancel(poy.dateClose) : null
                 const winAmount = poy.winPrice || poy.totalWin || 0
 
                 return (
@@ -408,7 +417,7 @@ const LotteryHistory: React.FC = () => {
                               <div className="flex items-center gap-2">
                                 <FiClock className="text-orange-400 animate-pulse" />
                                 <span className="text-orange-300 text-sm font-medium">
-                                  {t('lottery:labels.timeLeftToCancel', { minutes: timeLeft })}
+                                  เหลือเวลา: {timeLeft}
                                 </span>
                               </div>
                               <button
