@@ -349,6 +349,19 @@ const LotteryBetting: React.FC = () => {
       return
     }
 
+    // Check if any special number exceeds remaining amount
+    const exceedsLimit = cart.find(item => {
+      if (item.isSpecialNumber && item.remainingAmount !== undefined) {
+        return item.amount > item.remainingAmount
+      }
+      return false
+    })
+
+    if (exceedsLimit) {
+      toast.error(`เลข ${exceedsLimit.number} แทงได้เหลือ ${exceedsLimit.remainingAmount} บาท แต่กรอก ${exceedsLimit.amount} บาท`)
+      return
+    }
+
     // Show confirmation
     setShowConfirmModal(true)
   }

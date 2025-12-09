@@ -66,6 +66,14 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
     return item.isSpecialNumber === true && item.remainingAmount === 0 && item.checkResult === 99
   }
 
+  // Check if item exceeds remaining limit
+  const exceedsLimit = (item: CartItem): boolean => {
+    if (item.isSpecialNumber && item.remainingAmount !== undefined) {
+      return item.amount > item.remainingAmount
+    }
+    return false
+  }
+
   // Group cart items by bet type category (digit count)
   const groupedCart = cart.reduce((groups, item) => {
     const category = getBetTypeCategory(item.bet_type)
@@ -193,24 +201,39 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
                           <input
                             type="number"
                             value={item.amount || ''}
-                            onChange={(e) => onUpdateAmount(item.id, parseFloat(e.target.value) || 0)}
+                            onChange={(e) => {
+                              const inputValue = parseFloat(e.target.value) || 0
+                              // Check if item has special number limit
+                              if (item.isSpecialNumber && item.remainingAmount !== undefined) {
+                                // Don't allow amount greater than remaining
+                                if (inputValue > item.remainingAmount) {
+                                  onUpdateAmount(item.id, item.remainingAmount)
+                                  return
+                                }
+                              }
+                              onUpdateAmount(item.id, inputValue)
+                            }}
                             className={`w-full px-1.5 py-1 bg-white/10 border border-white/20 rounded text-white font-bold text-xs focus:outline-none focus:border-yellow-400 transition-colors ${isSoldOut(item) ? 'opacity-50 cursor-not-allowed' : ''}`}
                             placeholder="0"
                             min={config?.min || 1}
-                            max={config?.max || 1000}
+                            max={item.isSpecialNumber && item.remainingAmount !== undefined ? item.remainingAmount : (config?.max || 1000)}
                             disabled={isSoldOut(item)}
                           />
 
                           {/* Special Number Info */}
-                          {item.isSpecialNumber && item.maxSaleAmount !== undefined && (
-                            <div className="mt-0.5 space-y-0.5">
-                              <div className="text-[8px] text-white/60">
-                                ขายแล้ว: {formatNumber(item.soldAmount || 0)} / {formatNumber(item.maxSaleAmount)}
-                              </div>
-                              <div className={`text-[8px] font-bold ${getRemainingColor(item.remainingAmount || 0, item.maxSaleAmount)}`}>
-                                เหลือ: {formatNumber(item.remainingAmount || 0)} บาท
-                                {isSoldOut(item) && <span className="text-red-400"> (ขายหมด)</span>}
-                              </div>
+                          {item.isSpecialNumber && (
+                            <div className="mt-0.5">
+                              {isSoldOut(item) && (
+                                <div className="text-[8px] text-red-400 font-bold">
+                                  ขายหมดแล้ว
+                                </div>
+                              )}
+                              {/* Warning when amount exceeds remaining */}
+                              {!isSoldOut(item) && item.amount > (item.remainingAmount || 0) && (
+                                <div className="text-[8px] text-red-400 font-bold animate-pulse">
+                                  ⚠ กรอกเกินลิมิต!
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -267,12 +290,21 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
             </div>
           )}
 
+          {/* Exceeds Limit Warning */}
+          {cart.some(item => exceedsLimit(item)) && (
+            <div className="bg-orange-600/20 border border-orange-600/50 rounded-lg p-1.5 mb-1.5">
+              <p className="text-orange-400 text-[10px] font-semibold text-center">
+                มีเลขที่กรอกเกินลิมิต กรุณาแก้ไขก่อนทำการแทง
+              </p>
+            </div>
+          )}
+
           {/* Submit Button */}
           <motion.button
             onClick={onSubmit}
-            disabled={submitting || cart.some(item => isSoldOut(item))}
-            whileHover={!submitting && !cart.some(item => isSoldOut(item)) ? { scale: 1.02 } : {}}
-            whileTap={!submitting && !cart.some(item => isSoldOut(item)) ? { scale: 0.98 } : {}}
+            disabled={submitting || cart.some(item => isSoldOut(item)) || cart.some(item => exceedsLimit(item))}
+            whileHover={!submitting && !cart.some(item => isSoldOut(item)) && !cart.some(item => exceedsLimit(item)) ? { scale: 1.02 } : {}}
+            whileTap={!submitting && !cart.some(item => isSoldOut(item)) && !cart.some(item => exceedsLimit(item)) ? { scale: 0.98 } : {}}
             className="w-full py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 disabled:from-gray-600 disabled:to-gray-700 text-white rounded-lg font-bold text-sm transition-all shadow-xl flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             {submitting ? (
@@ -284,6 +316,11 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
               <>
                 <FiX className="text-sm" />
                 <span className="text-xs">มีเลขขายหมด</span>
+              </>
+            ) : cart.some(item => exceedsLimit(item)) ? (
+              <>
+                <FiX className="text-sm" />
+                <span className="text-xs">กรอกเกินลิมิต</span>
               </>
             ) : (
               <>
