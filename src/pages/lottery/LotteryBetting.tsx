@@ -294,7 +294,7 @@ const LotteryBetting: React.FC = () => {
   }
 
   // Handle Add Multiple Numbers (from special options)
-  const handleAddNumbers = (numbers: string[]) => {
+  const handleAddNumbers = async (numbers: string[]) => {
     if (selectedBetTypes.length === 0) return
 
     let addedCount = 0
@@ -307,19 +307,45 @@ const LotteryBetting: React.FC = () => {
       const config = BET_TYPES[betType]
       if (!config) continue
 
-      numbers.forEach(number => {
+      for (const number of numbers) {
         if (!checkDuplicate(number, betType, cart)) {
-          addToCart({
-            bet_type: betType,
-            bet_type_label: config.label,
-            number,
-            amount: 0,
-            payout_rate: rate.multiply,
-            huayName: period?.huayName
-          })
-          addedCount++
+          try {
+            // Check multiply for this number
+            const checkResult = await memberLotteryCheckAPI.checkMultiply({
+              huayId: period?.lotteryId || 1,
+              stockType: period?.huayCode?.startsWith('g') ? 'g' : 's',
+              huayOption: betType,
+              poyNumber: number,
+              multiply: rate.multiply,
+              value: 1
+            })
+
+            // Use actual multiply from API
+            addToCart({
+              bet_type: betType,
+              bet_type_label: config.label,
+              number,
+              amount: rate.min_bet || 1,
+              payout_rate: checkResult.multiply,
+              huayName: period?.huayName,
+              isSpecialNumber: checkResult.isSpecialNumber,
+              soldAmount: checkResult.soldAmount,
+              remainingAmount: checkResult.remainingAmount,
+              maxSaleAmount: checkResult.maxSaleAmount,
+              checkResult: checkResult.result
+            })
+            addedCount++
+
+            // Show condition message if available
+            if (checkResult.codition && checkResult.result !== 1) {
+              toast(`${number}: ${checkResult.codition}`, { duration: 3000, icon: 'ℹ️' })
+            }
+          } catch (error) {
+            console.error('Check multiply error:', error)
+            toast.error(t('lottery:errors.checkMultiplyFailed'))
+          }
         }
-      })
+      }
     }
 
     if (addedCount > 0) {
