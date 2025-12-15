@@ -45,7 +45,9 @@ export default function AdminLayout() {
       icon: <FiDollarSign className="w-5 h-5" />,
       children: [
         { name: 'รายการฝากรอดำเนินการ', path: '/admin/deposits/pending', icon: null },
+        { name: 'รายการฝากทั้งหมด', path: '/admin/deposits/all', icon: null },
         { name: 'รายการถอนรอดำเนินการ', path: '/admin/withdrawals/pending', icon: null },
+        { name: 'รายการถอนทั้งหมด', path: '/admin/withdrawals/all', icon: null },
         { name: 'รายการคืนยอดเสีย', path: '/admin/cashback', icon: null },
       ],
     },
