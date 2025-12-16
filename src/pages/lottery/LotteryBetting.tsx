@@ -132,7 +132,13 @@ const LotteryBetting: React.FC = () => {
 
       // Check if period is closed
       const now = new Date()
-      const closeTime = new Date(foundPeriod.closeTime)
+      let closeTime = new Date(foundPeriod.closeTime)
+
+      // If flag_nextday is true, add 1 day to closeTime
+      if (foundPeriod.flagNextday) {
+        closeTime = new Date(closeTime.getTime() + 24 * 60 * 60 * 1000)
+      }
+
       if (now > closeTime) {
         setIsClosed(true)
         // Load lottery result
@@ -746,18 +752,30 @@ const LotteryBetting: React.FC = () => {
               <div className="flex items-center gap-2 text-yellow-300 mb-1">
                 <FiClock className="text-lg animate-pulse" />
                 <span className="text-base font-bold">
-                  {t('lottery:actions.closingAt')}: {new Date(period.closeTime).toLocaleTimeString('th-TH', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
+                  {t('lottery:actions.closingAt')}: {(() => {
+                    let displayTime = new Date(period.closeTime)
+                    if (period.flagNextday) {
+                      displayTime = new Date(displayTime.getTime() + 24 * 60 * 60 * 1000)
+                    }
+                    return displayTime.toLocaleTimeString('th-TH', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  })()}
                 </span>
               </div>
               <div className="text-white/80 text-xs">
-                {period.drawTime ? new Date(period.drawTime).toLocaleDateString('th-TH', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                }) : '-'}
+                {period.drawTime ? (() => {
+                  let displayDate = new Date(period.drawTime)
+                  if (period.flagNextday) {
+                    displayDate = new Date(displayDate.getTime() + 24 * 60 * 60 * 1000)
+                  }
+                  return displayDate.toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })
+                })() : '-'}
               </div>
             </div>
           </div>

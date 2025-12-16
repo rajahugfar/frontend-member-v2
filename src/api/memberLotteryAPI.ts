@@ -83,6 +83,7 @@ export interface OpenPeriod {
   totalProfit: number
   createdAt: string
   updatedAt: string
+  flagNextday?: boolean
 }
 
 export interface LotteryRate {
@@ -233,29 +234,44 @@ export const memberLotteryAPI = {
 
     // Transform response to match OpenPeriod interface
     const lotteries = response.data.data || []
-    return lotteries.map((lottery: any) => ({
-      id: String(lottery.id),
-      name: lottery.name || lottery.stockName,
-      round: lottery.round,
-      closeTime: lottery.closeTime || lottery.dateClose,
-      resultTime: lottery.resultTime || lottery.stockTime,
-      huayCode: lottery.huayCode,
-      icon: lottery.icon,
-      // Add computed fields for backward compatibility
-      huayName: lottery.name || lottery.stockName,
-      periodName: lottery.round || lottery.name || new Date(lottery.stockTime || lottery.closeTime).toLocaleDateString('th-TH'),
-      periodDate: lottery.stockTime || lottery.closeTime,
-      drawTime: lottery.resultTime || lottery.stockTime,
-      openTime: lottery.dateBuy || lottery.openTime,
-      status: 'OPEN' as const,
-      lotteryId: lottery.id || 0,
-      huayGroup: lottery.stockType || 0,
-      totalBetAmount: 0,
-      totalPayoutAmount: 0,
-      totalProfit: 0,
-      createdAt: lottery.dateBuy || '',
-      updatedAt: lottery.dateBuy || ''
-    }))
+    return lotteries.map((lottery: any) => {
+      const mapped = {
+        id: String(lottery.id),
+        name: lottery.name,
+        round: lottery.round,
+        closeTime: lottery.closeTime,
+        resultTime: lottery.resultTime,
+        huayCode: lottery.huayCode,
+        icon: lottery.icon,
+        flagNextday: lottery.flagNextday ?? false,
+        // Add computed fields for backward compatibility
+        huayName: lottery.name,
+        periodName: lottery.round || new Date(lottery.closeTime).toLocaleDateString('th-TH'),
+        periodDate: lottery.resultTime,
+        drawTime: lottery.resultTime,
+        openTime: lottery.closeTime, // Use closeTime as placeholder
+        status: 'OPEN' as const,
+        lotteryId: lottery.id,
+        huayGroup: 0,
+        totalBetAmount: 0,
+        totalPayoutAmount: 0,
+        totalProfit: 0,
+        createdAt: lottery.closeTime,
+        updatedAt: lottery.closeTime
+      }
+
+      // Debug log for specific lotteries
+      if (lottery.huayCode === 'DJIVIP' || lottery.huayCode === 'DJI') {
+        console.log(`📦 API Mapping ${lottery.name}:`, {
+          raw_flagNextday: lottery.flagNextday,
+          mapped_flagNextday: mapped.flagNextday,
+          closeTime: mapped.closeTime,
+          huayCode: mapped.huayCode
+        })
+      }
+
+      return mapped
+    })
   },
 
   // Get lottery payout rates

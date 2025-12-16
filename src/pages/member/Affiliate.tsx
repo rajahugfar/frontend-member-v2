@@ -789,7 +789,7 @@ const Affiliate: React.FC = () => {
                       <tbody>
                         {memberPoys.map((poy) => (
                           <tr key={poy.id} className="border-b border-white/5 hover:bg-white/5">
-                            <td className="py-3 px-4 text-white">{formatDate(poy.dateBuy)}</td>
+                            <td className="py-3 px-4 text-white">{formatDate(poy.createDate)}</td>
                             <td className="py-3 px-4 text-white font-mono">{poy.poyNumber || '-'}</td>
                             <td className="py-3 px-4 text-white">{poy.poyName || '-'}</td>
                             <td className="py-3 px-4 text-right text-white">฿{formatCurrency(poy.totalPrice)}</td>
