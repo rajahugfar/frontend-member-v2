@@ -281,6 +281,13 @@ const CartSidebar: React.FC<CartSidebarProps> = ({
             </div>
           </div>
 
+          {/* Daily Limit Info */}
+          <div className="bg-blue-600/20 border border-blue-600/50 rounded-lg p-1.5 mb-1.5">
+            <p className="text-blue-300 text-[10px] text-center leading-tight">
+              <span className="font-semibold">📊 วงเงินแทงรายวัน:</span> ไม่เกิน 500,000 บาท/หวย/วัน
+            </p>
+          </div>
+
           {/* Sold Out Warning */}
           {cart.some(item => isSoldOut(item)) && (
             <div className="bg-red-600/20 border border-red-600/50 rounded-lg p-1.5 mb-1.5">
