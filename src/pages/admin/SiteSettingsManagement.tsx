@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { FaCog, FaSave, FaPalette, FaGlobe, FaPhone } from 'react-icons/fa'
+import { FaCog, FaSave, FaPalette, FaGlobe, FaPhone, FaDice } from 'react-icons/fa'
 import { siteContentAPI } from '@api/siteContentAPI'
 import type { SiteSetting } from '../../types/siteContent'
 
@@ -72,6 +72,7 @@ const SiteSettingsManagement = () => {
       case 'theme': return <FaPalette className="text-purple-500" />
       case 'general': return <FaGlobe className="text-blue-500" />
       case 'contact': case 'social': return <FaPhone className="text-green-500" />
+      case 'lottery': return <FaDice className="text-yellow-500" />
       default: return <FaCog className="text-gray-500" />
     }
   }
@@ -83,6 +84,7 @@ const SiteSettingsManagement = () => {
       seo: 'SEO',
       contact: 'ติดต่อ',
       social: 'โซเชียลมีเดีย',
+      lottery: 'หวย',
     }
     return titles[groupName] || groupName
   }
